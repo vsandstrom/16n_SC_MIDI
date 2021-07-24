@@ -2,7 +2,7 @@
 *			16n controller MIDI 2 SC template
 */
 
-// TODO: create Gui that follows the fader input.
+// TODO: create Gui.
 
 MIDIClient.init();
 MIDIIn.connectAll;
@@ -23,29 +23,29 @@ MIDIIn.connectAll;
 
 
 // MIDIdef with correct midi \uid (srcID)
-	(
-		~sixteenVal0 = Bus.control(s, 1);
-		~sixteenVal1 = Bus.control(s, 1);
-		~sixteenVal2 = Bus.control(s, 1);
-		~sixteenVal3 = Bus.control(s, 1);
-		~sixteenVal4 = Bus.control(s, 1);
-		~sixteenVal5 = Bus.control(s, 1);
-		~sixteenVal6 = Bus.control(s, 1);
-		~sixteenVal7 = Bus.control(s, 1);
-		~sixteenVal8 = Bus.control(s, 1);
-		~sixteenVal9 = Bus.control(s, 1);
-		~sixteenVal10 = Bus.control(s, 1);
-		~sixteenVal11 = Bus.control(s, 1);
-		~sixteenVal12 = Bus.control(s, 1);
-		~sixteenVal13 = Bus.control(s, 1);
-		~sixteenVal14 = Bus.control(s, 1);
-		~sixteenVal15 = Bus.control(s, 1);
+(
+	~sixteenVal0 = Bus.control(s, 1);
+	~sixteenVal1 = Bus.control(s, 1);
+	~sixteenVal2 = Bus.control(s, 1);
+	~sixteenVal3 = Bus.control(s, 1);
+	~sixteenVal4 = Bus.control(s, 1);
+	~sixteenVal5 = Bus.control(s, 1);
+	~sixteenVal6 = Bus.control(s, 1);
+	~sixteenVal7 = Bus.control(s, 1);
+	~sixteenVal8 = Bus.control(s, 1);
+	~sixteenVal9 = Bus.control(s, 1);
+	~sixteenVal10 = Bus.control(s, 1);
+	~sixteenVal11 = Bus.control(s, 1);
+	~sixteenVal12 = Bus.control(s, 1);
+	~sixteenVal13 = Bus.control(s, 1);
+	~sixteenVal14 = Bus.control(s, 1);
+	~sixteenVal15 = Bus.control(s, 1);
 
-		MIDIdef.new(\sixteenN, {
-			|val, num, chan, src|
-			("cc: " ++ num ++ " " ++ val).postln;
+	MIDIdef.new(\sixteenN, {
+		|val, num, chan, src|
+		("cc: " ++ num ++ " value: " ++ val).postln;
 
-			switch(num, 
+		switch(num, 
 			32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
 			33, { ~sixteenVal1.set(val.linlin(0,127,0,1)) },
 			34, { ~sixteenVal2.set(val.linlin(0,127,0,1)) },
@@ -63,7 +63,6 @@ MIDIIn.connectAll;
 			46, { ~sixteenVal14.set(val.linlin(0,127,0,1)) },
 			47, { ~sixteenVal15.set(val.linlin(0,127,0,1)) },
 
-		)
-			
-		}, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: ~sixTeeN);
-	);
+		)			
+	}, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: ~sixTeeN);
+);
