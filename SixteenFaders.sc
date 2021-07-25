@@ -3,8 +3,8 @@
 *			16n Supercollider Class 
 */
 
-TODO: Swap global variables for getters.
-TODO: Only allocate Bus.control if called. 
+//  TODO: Swap global variables for getters.
+//  TODO: Only allocate Bus.control if called. 
 
 SixteenFaders {
 
