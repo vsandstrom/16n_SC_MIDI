@@ -1,5 +1,10 @@
+
+/* 
+*			16n Supercollider Class 
+*/
+
 SixteenFaders {
-	
+
 	*new {
 	
 		^super.new.init(  )
@@ -9,21 +14,24 @@ SixteenFaders {
 	init {
 		var found = "16n found";
 		var id = 0;
+		var midilist = [];
 		MIDIClient.init();
 		MIDIIn.connectAll;
-		~midiList = MIDIClient.sources;
+		midilist = MIDIClient.sources;
 
 		// Check if 16n is in MIDIEndPoints, store uid in global var.
 		(
-			for(0, ~midiList.size - 1, {
+			for(0, midilist.size - 1, {
 				arg i;
-				if (~midiList[i].asString == MIDIEndPoint("16n", "16n").asString, {
-				 var id = ~midiList[i].uid;
+				if (midilist[i].asString == MIDIEndPoint("16n", "16n").asString, {
+					id = midilist[i].uid;
 					MIDIIn.connectAll;
 					found.postln;
-					},
+					
+					}
 				)}
 			);
+			
 		);
 
 
@@ -48,7 +56,7 @@ SixteenFaders {
 
 			MIDIdef.new(\sixteenFaders, {
 				|val, num, chan, src|
-				("cc: " ++ num ++ " value: " ++ val).postln;
+				("Fader: " ++ (num - 31) ++ " value: " ++ val).postln;
 
 				switch(num, 
 					32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
@@ -77,7 +85,7 @@ SixteenFaders {
 	usage {
 		var usage = "Usage: ~sixteenVal* as Bus.control, where * is number from 0 to 15.";
 
-		^usage;
+		usage.postln;
 	}
 
 }
