@@ -7,7 +7,10 @@
 //  TODO: Only allocate Bus.control if called. 
 
 SixteenFaders {
+	var cc, val;
+	var >val0, >val1, >val2, >val3, >val4, >val5, >val6, >val7, >val8, >val9, >val10, >val11, >val12, >val13, >val14, >val15; 
 
+	
 	*new {
 	
 		^super.new.init(  )
@@ -58,7 +61,10 @@ SixteenFaders {
 			~sixteenVal15 = Bus.control(Server.default, 1);
 
 			MIDIdef.new(\sixteenFaders, {
-				|val, num, chan, src|
+				|value, num, chan, src|
+				cc = num;
+				val = value;
+
 				("Fader: " ++ (num - 31) ++ " value: " ++ val).postln;
 
 				switch(num, 
@@ -93,6 +99,24 @@ SixteenFaders {
 
 	fader { | num |
 		// TODO: Create new control busses getable through .fader()-method
+				switch(num, 
+					32, { if ( cc == 32, { val0 = val }); ^val0 },
+					33, { if ( cc == 33, { val1 = val }); ^val1 }, 
+					34, { if ( cc == 34, { val2 = val }); ^val1 }, 
+					35, { if ( cc == 35, { val3 = val }); ^val3 }, 
+					36, { if ( cc == 36, { val4 = val }); ^val4 }, 
+					37, { if ( cc == 37, { val5 = val }); ^val5 }, 
+					38, { if ( cc == 38, { val6 = val }); ^val6 }, 
+					39, { if ( cc == 39, { val7 = val }); ^val7 }, 
+					40, { if ( cc == 40, { val8 = val }); ^val8 }, 
+					41, { if ( cc == 41, { val9 = val }); ^val9 }, 
+					42, { if ( cc == 42, { val10 = val }); ^val10 }, 
+					43, { if ( cc == 43, { val11 = val }); ^val11 }, 
+					44, { if ( cc == 44, { val12 = val }); ^val12 }, 
+					45, { if ( cc == 45, { val13 = val }); ^val13 }, 
+					46, { if ( cc == 46, { val14 = val }); ^val14 }, 
+					47, { if ( cc == 47, { val15 = val }); ^val15 }, 
+
 		
 	}
 
