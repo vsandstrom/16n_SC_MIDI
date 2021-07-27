@@ -44,22 +44,22 @@ SixteenFaders {
 
 		// MIDIdef with correct midi \uid (srcID)
 		(
-			~sixteenVal0 = Bus.control(Server.default, 1);
-			~sixteenVal1 = Bus.control(Server.default, 1);
-			~sixteenVal2 = Bus.control(Server.default, 1);
-			~sixteenVal3 = Bus.control(Server.default, 1);
-			~sixteenVal4 = Bus.control(Server.default, 1);
-			~sixteenVal5 = Bus.control(Server.default, 1);
-			~sixteenVal6 = Bus.control(Server.default, 1);
-			~sixteenVal7 = Bus.control(Server.default, 1);
-			~sixteenVal8 = Bus.control(Server.default, 1);
-			~sixteenVal9 = Bus.control(Server.default, 1);
-			~sixteenVal10 = Bus.control(Server.default, 1);
-			~sixteenVal11 = Bus.control(Server.default, 1);
-			~sixteenVal12 = Bus.control(Server.default, 1);
-			~sixteenVal13 = Bus.control(Server.default, 1);
-			~sixteenVal14 = Bus.control(Server.default, 1);
-			~sixteenVal15 = Bus.control(Server.default, 1);
+			// ~sixteenVal0 = Bus.control(Server.default, 1);
+			// ~sixteenVal1 = Bus.control(Server.default, 1);
+			// ~sixteenVal2 = Bus.control(Server.default, 1);
+			// ~sixteenVal3 = Bus.control(Server.default, 1);
+			// ~sixteenVal4 = Bus.control(Server.default, 1);
+			// ~sixteenVal5 = Bus.control(Server.default, 1);
+			// ~sixteenVal6 = Bus.control(Server.default, 1);
+			// ~sixteenVal7 = Bus.control(Server.default, 1);
+			// ~sixteenVal8 = Bus.control(Server.default, 1);
+			// ~sixteenVal9 = Bus.control(Server.default, 1);
+			// ~sixteenVal10 = Bus.control(Server.default, 1);
+			// ~sixteenVal11 = Bus.control(Server.default, 1);
+			// ~sixteenVal12 = Bus.control(Server.default, 1);
+			// ~sixteenVal13 = Bus.control(Server.default, 1);
+			// ~sixteenVal14 = Bus.control(Server.default, 1);
+			// ~sixteenVal15 = Bus.control(Server.default, 1);
 
 			MIDIdef.new(\sixteenFaders, {
 				|value, num, chan, src|
@@ -68,25 +68,24 @@ SixteenFaders {
 
 				("Fader: " ++ (num - 31) ++ " value: " ++ val).postln;
 
-				switch(num, 
-					32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
-					33, { ~sixteenVal1.set(val.linlin(0,127,0,1)) },
-					34, { ~sixteenVal2.set(val.linlin(0,127,0,1)) },
-					35, { ~sixteenVal3.set(val.linlin(0,127,0,1)) },
-					36, { ~sixteenVal4.set(val.linlin(0,127,0,1)) },
-					37, { ~sixteenVal5.set(val.linlin(0,127,0,1)) },
-					38, { ~sixteenVal6.set(val.linlin(0,127,0,1)) },
-					39, { ~sixteenVal7.set(val.linlin(0,127,0,1)) },
-					40, { ~sixteenVal8.set(val.linlin(0,127,0,1)) },
-					41, { ~sixteenVal9.set(val.linlin(0,127,0,1)) },
-					42, { ~sixteenVal10.set(val.linlin(0,127,0,1)) },
-					43, { ~sixteenVal11.set(val.linlin(0,127,0,1)) },
-					44, { ~sixteenVal12.set(val.linlin(0,127,0,1)) },
-					45, { ~sixteenVal13.set(val.linlin(0,127,0,1)) },
-					46, { ~sixteenVal14.set(val.linlin(0,127,0,1)) },
-					47, { ~sixteenVal15.set(val.linlin(0,127,0,1)) },
+				// switch(num, 
+				// 	32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
+				// 	33, { ~sixteenVal1.set(val.linlin(0,127,0,1)) },
+				// 	34, { ~sixteenVal2.set(val.linlin(0,127,0,1)) },
+				// 	35, { ~sixteenVal3.set(val.linlin(0,127,0,1)) },
+				// 	36, { ~sixteenVal4.set(val.linlin(0,127,0,1)) },
+				// 	37, { ~sixteenVal5.set(val.linlin(0,127,0,1)) },
+				// 	38, { ~sixteenVal6.set(val.linlin(0,127,0,1)) },
+				// 	39, { ~sixteenVal7.set(val.linlin(0,127,0,1)) },
+				// 	40, { ~sixteenVal8.set(val.linlin(0,127,0,1)) },
+				// 	41, { ~sixteenVal9.set(val.linlin(0,127,0,1)) },
+				// 	42, { ~sixteenVal10.set(val.linlin(0,127,0,1)) },
+				// 	43, { ~sixteenVal11.set(val.linlin(0,127,0,1)) },
+				// 	44, { ~sixteenVal12.set(val.linlin(0,127,0,1)) },
+				// 	45, { ~sixteenVal13.set(val.linlin(0,127,0,1)) },
+				// 	46, { ~sixteenVal14.set(val.linlin(0,127,0,1)) },
+				// 	47, { ~sixteenVal15.set(val.linlin(0,127,0,1)) });
 
-				)			
 			}, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
 		);
 		
@@ -98,7 +97,7 @@ SixteenFaders {
 		usage.postln;
 	}
 
-	fader { | num |
+	fader_{ | num |
 		// TODO: Create new control busses getable through .fader()-method
 				switch(num + 32, 
 					32, { if ( cc == 32, { val0 = val }); ^val0 },
@@ -116,7 +115,7 @@ SixteenFaders {
 					44, { if ( cc == 44, { val12 = val }); ^val12 }, 
 					45, { if ( cc == 45, { val13 = val }); ^val13 }, 
 					46, { if ( cc == 46, { val14 = val }); ^val14 }, 
-					47, { if ( cc == 47, { val15 = val }); ^val15 }, 
+					47, { if ( cc == 47, { val15 = val }); ^val15 });
 
 		
 	}
