@@ -1,11 +1,6 @@
 /* 
 *			16n controller MIDI 2 SC template
 */
-f =	SixteenFaders.new
-
-
-
-f.usage;
 
 
 // TODO: create Gui.
