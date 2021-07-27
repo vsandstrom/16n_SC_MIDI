@@ -59,7 +59,7 @@ SixteenFaders {
 
 			MIDIdef.new(\sixteenFaders, {
 				|val, num, chan, src|
-				("Fader: " ++ (num - 31) ++ " value: " ++ val).postln;
+				("Fader: " ++ (num - 32) ++ " value: " ++ val).postln;
 
 				switch(num, 
 					32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
