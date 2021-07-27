@@ -100,7 +100,7 @@ SixteenFaders {
 
 	fader { | num |
 		// TODO: Create new control busses getable through .fader()-method
-				switch(num, 
+				switch(num + 32, 
 					32, { if ( cc == 32, { val0 = val }); ^val0 },
 					33, { if ( cc == 33, { val1 = val }); ^val1 }, 
 					34, { if ( cc == 34, { val2 = val }); ^val1 }, 
