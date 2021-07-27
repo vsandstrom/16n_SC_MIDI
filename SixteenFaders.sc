@@ -88,4 +88,9 @@ SixteenFaders {
 		usage.postln;
 	}
 
+	fader { | num |
+		// TODO: Create new control busses getable through .fader()-method
+		
+	}
+
 }
