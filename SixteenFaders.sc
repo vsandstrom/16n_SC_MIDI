@@ -59,7 +59,9 @@ SixteenFaders {
 
 			MIDIdef.new(\sixteenFaders, {
 				|val, num, chan, src|
-				("Fader: " ++ (num - 32) ++ " value: " ++ val).postln;
+				
+				("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
+				"	Value: " ++ '[ ' ++ val ++ ' ]').postln;
 
 				switch(num, 
 					32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
@@ -93,7 +95,8 @@ SixteenFaders {
 
 	fader { | num |
 		// TODO: Create new control busses getable through .fader()-method
-		
+		var msg = "[ ] Implement this function sometime.";
+		msg.postln;
 	}
 
 }
