@@ -1,17 +1,13 @@
-
 /* 
 *			16n Supercollider Class 
 */
 
-//  TODO: Swap global variables for getters.
-//  TODO: Only allocate Bus.control if called. 
-
 SixteenFaders {
+	classvar func;
+	var <fader, enable = true;
 
 	*new {
-	
-		^super.new.init(  )
-	
+		^super.new.init();
 	}
 
 	init {
@@ -30,73 +26,67 @@ SixteenFaders {
 					id = midilist[i].uid;
 					MIDIIn.connectAll;
 					found.postln;
-					
-					}
-				)}
+					};
+				)};
 			);
-			
 		);
-
 
 		// MIDIdef with correct midi \uid (srcID)
 		(
-			~sixteenVal0 = Bus.control(Server.default, 1);
-			~sixteenVal1 = Bus.control(Server.default, 1);
-			~sixteenVal2 = Bus.control(Server.default, 1);
-			~sixteenVal3 = Bus.control(Server.default, 1);
-			~sixteenVal4 = Bus.control(Server.default, 1);
-			~sixteenVal5 = Bus.control(Server.default, 1);
-			~sixteenVal6 = Bus.control(Server.default, 1);
-			~sixteenVal7 = Bus.control(Server.default, 1);
-			~sixteenVal8 = Bus.control(Server.default, 1);
-			~sixteenVal9 = Bus.control(Server.default, 1);
-			~sixteenVal10 = Bus.control(Server.default, 1);
-			~sixteenVal11 = Bus.control(Server.default, 1);
-			~sixteenVal12 = Bus.control(Server.default, 1);
-			~sixteenVal13 = Bus.control(Server.default, 1);
-			~sixteenVal14 = Bus.control(Server.default, 1);
-			~sixteenVal15 = Bus.control(Server.default, 1);
+			fader = 16.collect{
+				Bus.control(Server.default, 1);
+			};
 
-			MIDIdef.new(\sixteenFaders, {
-				|val, num, chan, src|
-				
-				("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
-				"	Value: " ++ '[ ' ++ val ++ ' ]').postln;
+			if (func.isNil) {
+				MIDIFunc.new({
+					|val, num, chan, src|
 
-				switch(num, 
-					32, { ~sixteenVal0.set(val.linlin(0,127,0,1)) },
-					33, { ~sixteenVal1.set(val.linlin(0,127,0,1)) },
-					34, { ~sixteenVal2.set(val.linlin(0,127,0,1)) },
-					35, { ~sixteenVal3.set(val.linlin(0,127,0,1)) },
-					36, { ~sixteenVal4.set(val.linlin(0,127,0,1)) },
-					37, { ~sixteenVal5.set(val.linlin(0,127,0,1)) },
-					38, { ~sixteenVal6.set(val.linlin(0,127,0,1)) },
-					39, { ~sixteenVal7.set(val.linlin(0,127,0,1)) },
-					40, { ~sixteenVal8.set(val.linlin(0,127,0,1)) },
-					41, { ~sixteenVal9.set(val.linlin(0,127,0,1)) },
-					42, { ~sixteenVal10.set(val.linlin(0,127,0,1)) },
-					43, { ~sixteenVal11.set(val.linlin(0,127,0,1)) },
-					44, { ~sixteenVal12.set(val.linlin(0,127,0,1)) },
-					45, { ~sixteenVal13.set(val.linlin(0,127,0,1)) },
-					46, { ~sixteenVal14.set(val.linlin(0,127,0,1)) },
-					47, { ~sixteenVal15.set(val.linlin(0,127,0,1)) },
+					if (enable) {
+						("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
+						"	Value: " ++ '[ ' ++ val ++ ' ]').postln;
+					};
 
-				)			
-			}, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
+					switch(num, 
+						32, { fader[0].set(val.linlin(0,127,0,1)) },
+						33, { fader[1].set(val.linlin(0,127,0,1)) },
+						34, { fader[2].set(val.linlin(0,127,0,1)) },
+						35, { fader[3].set(val.linlin(0,127,0,1)) },
+						36, { fader[4].set(val.linlin(0,127,0,1)) },
+						37, { fader[5].set(val.linlin(0,127,0,1)) },
+						38, { fader[6].set(val.linlin(0,127,0,1)) },
+						39, { fader[7].set(val.linlin(0,127,0,1)) },
+						40, { fader[8].set(val.linlin(0,127,0,1)) },
+						41, { fader[9].set(val.linlin(0,127,0,1)) },
+						42, { fader[10].set(val.linlin(0,127,0,1)) },
+						43, { fader[11].set(val.linlin(0,127,0,1)) },
+						44, { fader[12].set(val.linlin(0,127,0,1)) },
+						45, { fader[13].set(val.linlin(0,127,0,1)) },
+						46, { fader[14].set(val.linlin(0,127,0,1)) },
+						47, { fader[15].set(val.linlin(0,127,0,1)) },
+
+					)			
+				}, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
+
+			}
+
 		);
-		
 	}
 
-	usage {
-		var usage = "Usage: ~sixteenVal* as Bus.control, where * is number from 0 to 15.";
+    faderAt {|faderPosition|
+        ^fader[faderPosition];
 
-		usage.postln;
+    }
+
+	enablePost {
+		enable = true;
 	}
 
-	fader { | num |
-		// TODO: Create new control busses getable through .fader()-method
-		var msg = "[ ] Implement this function sometime.";
-		msg.postln;
+	disablePost {
+		enable = false;
 	}
 
+	usage { 
+      var usage = "Usage: A 'Bus' object is accessed by <instance of object>.fader[n] or \n<instance of object>.faderAt(n). 'n' is the corresponding fader number, \nbut zero-indexed. ('0' gets you the first fader)\n";
+        Post << "|----------------------------------------------------------------------//\n" << usage << "|----------------------------------------------------------------------//\n";
+	}
 }
