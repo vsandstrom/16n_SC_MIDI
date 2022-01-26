@@ -5,15 +5,19 @@ Midi-controller help class for the 16n Faderbank.
 ```supercollider
 f = SixteenFaders.new;
 ```
-## Methods:
+When evaluated, it detects if there is a Faderbank connected to the computer and populates a control bus for each fader.
 
-The class detects if there is a Faderbank connected to the computer and makes each fader available as a control bus through either:<br>
+## Methods:
+The returned object makes each control bus available through either:<br>
 <br>
 ```supercollider
+// member variable "fader"
 f.fader[n];
+
 ```
 or
 ```supercollider
+// instance method "faderAt()"
 f.faderAt(n);
 ```
 The "fader" array, containing each of the 16 control busses, are zero-indexed.
