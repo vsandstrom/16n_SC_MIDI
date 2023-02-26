@@ -20,15 +20,14 @@ SixteenFaders {
 
 		// Check if 16n is in MIDIEndPoints, store uid in global var.
 		(
-			for(0, midilist.size - 1, {
+			for(0, midilist.size - 1){
 				arg i;
-				if (midilist[i].asString == MIDIEndPoint("16n", "16n").asString, {
+				if (midilist[i].asString == MIDIEndPoint("16n", "16n").asString) {
 					id = midilist[i].uid;
 					MIDIIn.connectAll;
 					found.postln;
-					};
-				)};
-			);
+				};
+			};
 		);
 
 		// MIDIdef with correct midi \uid (srcID)
@@ -86,7 +85,7 @@ SixteenFaders {
 	}
 
 	usage { 
-      var usage = "Usage: A 'Bus' object is accessed by <instance of object>.fader[n] or \n<instance of object>.faderAt(n). 'n' is the corresponding fader number, \nbut zero-indexed. ('0' gets you the first fader)\n";
+      var usage = "Usage: A 'Bus' object is accessed by SixteenFaders.fader[n] or \nSixteenFaders.faderAt(n). 'n' is the corresponding fader number, \nbut zero-indexed. ('0' gets you the first fader)\n";
         Post << "|----------------------------------------------------------------------//\n" << usage << "|----------------------------------------------------------------------//\n";
 	}
 }
