@@ -1,27 +1,20 @@
-
 /* 
 *			16n Supercollider Class 
 */
 
-//  TODO: Swap global variables for getters.
-//  TODO: Only allocate Bus.control if called. 
-
 SixteenFaders {
-	var cc, val;
-	// var val0, val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15; 
+	classvar func;
+    classvar physical = false;
+	var <fader, 
+    var enable = true;
 
-	// Getters for every cc-value of controller:
-	var >val0, >val1, >val2, >val3, >val4, >val5, >val6, >val7, >val8, >val9, >val10, >val11, >val12, >val13, >val14, >val15; 
-
-	
 	*new {
-	
-		^super.new.init(  )
-	
+		^super.new.init();
 	}
 
 	init {
 		var found = "16n found";
+        var server = Server.default;
 		var id = 0;
 		var midilist = [];
 		MIDIClient.init();
@@ -30,53 +23,87 @@ SixteenFaders {
 
 		// Check if 16n is in MIDIEndPoints, store uid in global var.
 		(
-			for(0, midilist.size - 1, {
-				arg i;
-				if (midilist[i].asString == MIDIEndPoint("16n", "16n").asString, {
+			for(0, midilist.size - 1){|i|
+				if (midilist[i].device == "16n", {
 					id = midilist[i].uid;
 					MIDIIn.connectAll;
 					found.postln;
-					
-					}
-				)}
-			)			
-		);
+                    physical = true;
+				    };
+                )};
+            );
+        );
 
 		// MIDIdef with correct midi \uid (srcID)
 		(
-			MIDIdef.new(\sixteenFaders, {
-				|value, num, chan, src|
-				cc = num;
-				val = value;
+			fader = 16.collect{
+				Bus.control(server, 1);
+			};
 
-				("Fader: " ++ (num - 31) ++ " value: " ++ val).postln;
+			if (func.isNil) {
+                if (physical) {
+                    func = MIDIFunc.new({
+                        |val, num, chan, src|
+                        if (enable) {
+                            ("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
+                            "	Value: " ++ '[ ' ++ val ++ ' ]').postln;
+                        };
 
-				switch(num, 
-					32, { val0 = val.linlin(0,127,0,1) },
-					33, { val1 = val.linlin(0,127,0,1) },
-					34, { val2 = val.linlin(0,127,0,1) },
-					35, { val3 = val.linlin(0,127,0,1) },
-					36, { val4 = val.linlin(0,127,0,1) },
-					37, { val5 = val.linlin(0,127,0,1) },
-					38, { val6 = val.linlin(0,127,0,1) },
-					39, { val7 = val.linlin(0,127,0,1) },
-					40, { val8 = val.linlin(0,127,0,1) },
-					41, { val9 = val.linlin(0,127,0,1) },
-					42, { val10 = val.linlin(0,127,0,1) },
-					43, { val11 = val.linlin(0,127,0,1) },
-					44, { val12 = val.linlin(0,127,0,1) },
-					45, { val13 = val.linlin(0,127,0,1) },
-					46, { val14 = val.linlin(0,127,0,1) },
-					47, { val15 = val.linlin(0,127,0,1) })
+                        switch(num, 
+                            32, { fader[0].set(val.linlin(0,127,0,1)) },
+                            33, { fader[1].set(val.linlin(0,127,0,1)) },
+                            34, { fader[2].set(val.linlin(0,127,0,1)) },
+                            35, { fader[3].set(val.linlin(0,127,0,1)) },
+                            36, { fader[4].set(val.linlin(0,127,0,1)) },
+                            37, { fader[5].set(val.linlin(0,127,0,1)) },
+                            38, { fader[6].set(val.linlin(0,127,0,1)) },
+                            39, { fader[7].set(val.linlin(0,127,0,1)) },
+                            40, { fader[8].set(val.linlin(0,127,0,1)) },
+                            41, { fader[9].set(val.linlin(0,127,0,1)) },
+                            42, { fader[10].set(val.linlin(0,127,0,1)) },
+                            43, { fader[11].set(val.linlin(0,127,0,1)) },
+                            44, { fader[12].set(val.linlin(0,127,0,1)) },
+                            45, { fader[13].set(val.linlin(0,127,0,1)) },
+                            46, { fader[14].set(val.linlin(0,127,0,1)) },
+                            47, { fader[15].set(val.linlin(0,127,0,1)) },
 
-			}, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
-		);	
+                        )			
+                    }, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
+
+                } {
+                    var window = Window.new("SixteenFaders", 1000@500, true, true, server, false).front;
+                    var sliders = 16.collect({|i|
+                        Slider(window, Rect(20, 50, 400, 20))
+                        // .action_({
+                        //     fader[i].set(sliders[i].value);
+                        //
+                        // })
+
+                    })
+
+
+                }
+
+			}
+
+		);
 	}
 
-	usage {
-		var usage = "Usage: ~sixteenVal* as Bus.control, where * is number from 0 to 15.";
+    faderAt {|faderPosition|
+        ^fader[faderPosition];
 
-		usage.postln;
+    }
+
+	enablePost {
+		enable = true;
 	}
 
+	disablePost {
+		enable = false;
+	}
+
+	usage { 
+      var usage = "Usage: A 'Bus' object is accessed by <instance of object>.fader[n] or \n<instance of object>.faderAt(n). 'n' is the corresponding fader number, \nbut zero-indexed. ('0' gets you the first fader)\n";
+        Post << "|----------------------------------------------------------------------//\n" << usage << "|----------------------------------------------------------------------//\n";
+	}
 }
