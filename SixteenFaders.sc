@@ -7,6 +7,7 @@ SixteenFaders {
 	var <fader;
     var enable = true;
     var physical = true;
+    var id;
 
 	*new {
 		^super.new.init();
@@ -15,22 +16,20 @@ SixteenFaders {
 	init {
 		var found = "16n found";
         var server = Server.default;
-		var id = 0;
-		var midilist = [];
+		var sources;
 		MIDIClient.init();
 		MIDIIn.connectAll;
-		midilist = MIDIClient.sources;
+		sources = MIDIClient.sources;
 
 		// Check if 16n is in MIDIEndPoints, store uid in global var.
 		(
-        for (0, midilist.size - 1){|i|
-            if (midilist[i].device == "16n", {
-                id = midilist[i].uid;
-                MIDIIn.connectAll;
+        sources.do{|source|
+            if (source.device == "16n") {
+                id = source.uid;
                 found.postln;
                 physical = true;
                 };
-            )};
+            };
 		);
 
 		// MIDIdef with correct midi \uid (srcID)
@@ -45,34 +44,33 @@ SixteenFaders {
             };
 
             if (physical) {
+                func = MIDIFunc.new({
+                    |val, num, chan, src|
+                    if (enable) {
+                        ("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
+                        "	Value: " ++ '[ ' ++ val ++ ' ]').postln;
+                    };
 
-            func = MIDIFunc.new({
-                |val, num, chan, src|
-                if (enable) {
-                    ("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
-                    "	Value: " ++ '[ ' ++ val ++ ' ]').postln;
-                };
+                    switch(num, 
+                        32, { fader[0].set(val.linlin(0,127,0,1)) },
+                        33, { fader[1].set(val.linlin(0,127,0,1)) },
+                        34, { fader[2].set(val.linlin(0,127,0,1)) },
+                        35, { fader[3].set(val.linlin(0,127,0,1)) },
+                        36, { fader[4].set(val.linlin(0,127,0,1)) },
+                        37, { fader[5].set(val.linlin(0,127,0,1)) },
+                        38, { fader[6].set(val.linlin(0,127,0,1)) },
+                        39, { fader[7].set(val.linlin(0,127,0,1)) },
+                        40, { fader[8].set(val.linlin(0,127,0,1)) },
+                        41, { fader[9].set(val.linlin(0,127,0,1)) },
+                        42, { fader[10].set(val.linlin(0,127,0,1)) },
+                        43, { fader[11].set(val.linlin(0,127,0,1)) },
+                        44, { fader[12].set(val.linlin(0,127,0,1)) },
+                        45, { fader[13].set(val.linlin(0,127,0,1)) },
+                        46, { fader[14].set(val.linlin(0,127,0,1)) },
+                        47, { fader[15].set(val.linlin(0,127,0,1)) },
 
-                switch(num, 
-                    32, { fader[0].set(val.linlin(0,127,0,1)) },
-                    33, { fader[1].set(val.linlin(0,127,0,1)) },
-                    34, { fader[2].set(val.linlin(0,127,0,1)) },
-                    35, { fader[3].set(val.linlin(0,127,0,1)) },
-                    36, { fader[4].set(val.linlin(0,127,0,1)) },
-                    37, { fader[5].set(val.linlin(0,127,0,1)) },
-                    38, { fader[6].set(val.linlin(0,127,0,1)) },
-                    39, { fader[7].set(val.linlin(0,127,0,1)) },
-                    40, { fader[8].set(val.linlin(0,127,0,1)) },
-                    41, { fader[9].set(val.linlin(0,127,0,1)) },
-                    42, { fader[10].set(val.linlin(0,127,0,1)) },
-                    43, { fader[11].set(val.linlin(0,127,0,1)) },
-                    44, { fader[12].set(val.linlin(0,127,0,1)) },
-                    45, { fader[13].set(val.linlin(0,127,0,1)) },
-                    46, { fader[14].set(val.linlin(0,127,0,1)) },
-                    47, { fader[15].set(val.linlin(0,127,0,1)) },
-
-                )
-            }, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
+                    )
+                }, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
             } {
                 postln("No 16n was found, no MIDIFunc created");
                 // TODO: Create a mock QT faderbank for testing
