@@ -2,8 +2,36 @@
 16n MIDI Controller Template
 
 Midi-controller help class for the 16n Faderbank.
+<br>
+Example:
 ```supercollider
-f = SixteenFaders.new;
+
+SynthDef(\test, {
+    var sig, env, verb;
+    sig = (SinOsc.ar(\freq.kr(300)) * \vol.kr(0))!2;
+    env = EnvGen.kr(
+        Env([0,1,0], [\atk.kr(0.1) / 2, \rel.kr(1) * 2], [-4, 4]),
+        \trig.kr(1), doneAction: 2
+    );
+    verb = NHHall.ar(sig) * \verbAmount.kr(0);
+    Out.ar(0, (sig + verb) * env );
+}).add;
+
+Synth(\test, [\vol, f.faderAt(0).asMap, \verb, f.faderAt(1)]);
+
+fork{
+    var s;
+    loop{
+        s = Synth(\test, [
+            \vol, f.faderAt(0).asMap,
+            \verbAmount, f.faderAt(1).asMap,
+            \atk, f.faderAt(2).asMap,
+            \rel, f.faderAt(3).asMap,
+        ]);
+        // wait(time);
+        wait(f.faderAt(4).getSynchronous.linexp(0, 1, 0.1, 2));
+    }
+}
 ```
 When evaluated, it detects if there is a Faderbank connected to the computer and populates a control bus for each fader.
 
@@ -32,3 +60,4 @@ Enables / disables the printing of every value- and fader change made.<br>
 f.usage;
 ```
 Posts a helpful "usage" message about the class. Can also be used as class method.
+<br>

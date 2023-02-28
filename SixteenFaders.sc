@@ -8,6 +8,7 @@ SixteenFaders {
     var enable = true;
     var physical = true;
     var id;
+    var midinum = 32;
 
 	*new {
 		^super.new.init();
@@ -47,36 +48,26 @@ SixteenFaders {
                 func = MIDIFunc.new({
                     |val, num, chan, src|
                     if (enable) {
-                        ("***	Fader: " ++ '[ ' ++ (num - 32) ++ ' ]' ++ 
+                        ("***	Fader: " ++ '[ ' ++ (num - midinum) ++ ' ]' ++ 
                         "	Value: " ++ '[ ' ++ val ++ ' ]').postln;
                     };
 
-                    switch(num, 
-                        32, { fader[0].set(val.linlin(0,127,0,1)) },
-                        33, { fader[1].set(val.linlin(0,127,0,1)) },
-                        34, { fader[2].set(val.linlin(0,127,0,1)) },
-                        35, { fader[3].set(val.linlin(0,127,0,1)) },
-                        36, { fader[4].set(val.linlin(0,127,0,1)) },
-                        37, { fader[5].set(val.linlin(0,127,0,1)) },
-                        38, { fader[6].set(val.linlin(0,127,0,1)) },
-                        39, { fader[7].set(val.linlin(0,127,0,1)) },
-                        40, { fader[8].set(val.linlin(0,127,0,1)) },
-                        41, { fader[9].set(val.linlin(0,127,0,1)) },
-                        42, { fader[10].set(val.linlin(0,127,0,1)) },
-                        43, { fader[11].set(val.linlin(0,127,0,1)) },
-                        44, { fader[12].set(val.linlin(0,127,0,1)) },
-                        45, { fader[13].set(val.linlin(0,127,0,1)) },
-                        46, { fader[14].set(val.linlin(0,127,0,1)) },
-                        47, { fader[15].set(val.linlin(0,127,0,1)) },
+                    if (num.inclusivelyBetween(midinum, midinum+15)) {
+                        fader[num - midinum].set(val / 127);
 
-                    )
-                }, msgNum: Array.series(16,32,1), chan: 0, msgType: \control, srcID: id);
+                    }
+                }, msgNum: Array.series(16,midinum,1), chan: 0, msgType: \control, srcID: id);
             } {
                 postln("No 16n was found, no MIDIFunc created");
                 // TODO: Create a mock QT faderbank for testing
             }
 		);
 	}
+
+    setMidiChannel {|num|
+        midinum = num;
+        this.init;
+    }
 
     faderAt {|faderPosition|
         ^fader[faderPosition];
