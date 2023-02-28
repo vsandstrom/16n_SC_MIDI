@@ -2,7 +2,7 @@
 16n MIDI Controller Template
 
 Midi-controller help class for the 16n Faderbank.
-<br>
+
 Example:
 ```supercollider
 
@@ -17,6 +17,8 @@ SynthDef(\test, {
     Out.ar(0, (sig + verb) * env );
 }).add;
 
+// IT IS SUPERIMPORTANT TO USE '.asMap' EVERYWHERE
+// otherwise we use the Bus number as a value, and it can get loud
 Synth(\test, [\vol, f.faderAt(0).asMap, \verb, f.faderAt(1)]);
 
 fork{
@@ -28,7 +30,8 @@ fork{
             \atk, f.faderAt(2).asMap,
             \rel, f.faderAt(3).asMap,
         ]);
-        // wait(time);
+        // EXCEPT HERE - where we sample the value once every
+        // run through the loop
         wait(f.faderAt(4).getSynchronous.linexp(0, 1, 0.1, 2));
     }
 }
@@ -50,6 +53,11 @@ f.faderAt(n);
 ```
 The "fader" array, containing each of the 16 control busses, are zero-indexed.
 To get the control bus corresponding to the first fader, it is at position [0].<br>
+<br>
+```supercollider
+f.setMidiChannel(n)
+```
+Changes the number of the first midi channel in the faderbank to something other than default (: 32).
 <br>
 ```supercollider
 f.enablePost; / f.disablePost;
